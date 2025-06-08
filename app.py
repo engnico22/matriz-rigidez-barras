@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 
 st.set_page_config(page_title="Calculadora de Rigidez", layout="wide")
 
@@ -170,8 +171,6 @@ with col2:
     )
 
 # Gráfico
-import plotly.graph_objects as go  # Agregalo arriba si no lo tenés
-
 st.markdown("""
     <div style="text-align:center; padding-top:20px;">
         <h2 style="color:#4F8BF9;">📊 Visualización de la Estructura</h2>
