@@ -170,52 +170,50 @@ with col2:
     )
 
 # Gráfico
+import plotly.graph_objects as go  # Agregalo arriba si no lo tenés
+
 st.markdown("""
     <div style="text-align:center; padding-top:20px;">
         <h2 style="color:#4F8BF9;">📊 Visualización de la Estructura</h2>
     </div>
 """, unsafe_allow_html=True)
 
-# Slider para amplificar desplazamientos
 factor_amplificacion = st.slider("🔍 Factor de amplificación de desplazamientos", min_value=1, max_value=500, value=100, step=10)
 
-fig, ax = plt.subplots(figsize=(8, 6))
-ax.set_facecolor("white")
-ax.set_aspect("equal")
+# Calcular coordenadas deformadas
+coords_deformados = coords + factor_amplificacion * u.reshape(-1, 2)
 
-# Dibujar estructura original (rojo)
+fig = go.Figure()
+
+# Estructura original
 for idx, (ni, nf, _, _) in enumerate(elementos):
-    xi, yi = coords[int(ni)]
-    xj, yj = coords[int(nf)]
-    ax.plot([xi, xj], [yi, yj], color='lightcoral', linewidth=2, label="Original" if idx == 0 else "")
+    x = [coords[int(ni)][0], coords[int(nf)][0]]
+    y = [coords[int(ni)][1], coords[int(nf)][1]]
+    fig.add_trace(go.Scatter(x=x, y=y, mode='lines+markers', name='Original', line=dict(color='red')))
 
-# Dibujar estructura deformada (azul)
-coords_deformados = coords + factor_amplificacion * u.flatten().reshape(-1, 2)
+# Estructura deformada
 for idx, (ni, nf, _, _) in enumerate(elementos):
-    xi, yi = coords_deformados[int(ni)]
-    xj, yj = coords_deformados[int(nf)]
-    ax.plot([xi, xj], [yi, yj], color='steelblue', linestyle='--', linewidth=2, label="Deformada" if idx == 0 else "")
+    x = [coords_deformados[int(ni)][0], coords_deformados[int(nf)][0]]
+    y = [coords_deformados[int(ni)][1], coords_deformados[int(nf)][1]]
+    fig.add_trace(go.Scatter(x=x, y=y, mode='lines+markers', name='Deformada', line=dict(color='blue', dash='dash')))
 
-# Dibujar nodos originales
-for i, (x, y) in enumerate(coords):
-    ax.plot(x, y, 'o', markersize=6, color="black")
-    ax.text(x + 0.05, y + 0.05, f"N{i}", fontsize=10, color="black", ha="center", va="center")
+# Etiquetas de nodos originales y deformados
+for i in range(n_nodos):
+    x_orig, y_orig = coords[i]
+    x_def, y_def = coords_deformados[i]
+    fig.add_trace(go.Scatter(x=[x_orig], y=[y_orig], mode='text', text=[f"N{i}"], textposition="top center", showlegend=False))
+    fig.add_trace(go.Scatter(x=[x_def], y=[y_def], mode='text', text=[f"N{i}'"], textposition="top center", showlegend=False))
 
-# Dibujar nodos deformados
-for i, (xd, yd) in enumerate(coords_deformados):
-    ax.plot(xd, yd, 'o', markersize=6, color="blue")
-    ax.text(xd + 0.05, yd + 0.05, f"N{i}'", fontsize=10, color="blue", ha="center", va="center")
+fig.update_layout(
+    title="Vista 2D de la estructura (interactiva)",
+    xaxis_title="X [m]",
+    yaxis_title="Y [m]",
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="center", x=0.5),
+    height=600
+)
 
-# Ajuste de ejes
-ax.set_title("Vista 2D de la estructura (Original y Deformada)", fontsize=14, color="#333333")
-ax.set_xlabel("X [m]", fontsize=12)
-ax.set_ylabel("Y [m]", fontsize=12)
-ax.grid(True, linestyle='--', alpha=0.5)
-ax.set_xlim(min(coords[:,0]) - 1, max(coords[:,0]) + 1)
-ax.set_ylim(min(coords[:,1]) - 1, max(coords[:,1]) + 1)
-ax.legend()
-
-st.pyplot(fig)
+fig.update_yaxes(scaleanchor="x", scaleratio=1)  # Mantiene proporción 1:1
+st.plotly_chart(fig, use_container_width=True)
 
 # Botón para descargar la matriz de rigidez global
 csv = df_Kglobal.to_csv(index=False).encode('utf-8')
