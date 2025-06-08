@@ -120,3 +120,14 @@ ax.set_ylabel("Y [m]")
 ax.grid(True, linestyle='--', alpha=0.5)
 st.pyplot(fig)
 
+# Botón para descargar la matriz de rigidez global
+csv = df_Kglobal.to_csv(index=False).encode('utf-8')
+
+st.download_button(
+    label="⬇️ Descargar matriz global en CSV",
+    data=csv,
+    file_name='matriz_rigidez_global.csv',
+    mime='text/csv',
+    help="Hace clic para descargar la matriz ensamblada"
+)
+
