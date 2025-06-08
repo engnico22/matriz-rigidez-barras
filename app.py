@@ -99,6 +99,44 @@ st.markdown("""
 df_Kglobal = pd.DataFrame(np.round(K_global, decimals=2))
 st.dataframe(df_Kglobal.style.background_gradient(cmap="Blues").format(precision=2))
 
+st.subheader("🎯 Vector de Cargas")
+
+# Ingreso del vector de fuerzas
+F_global = np.zeros((2 * n_nodos, 1))
+for i in range(2 * n_nodos):
+    F_global[i, 0] = st.number_input(f"Fuerza en GDL {i}", value=0.0, format="%.2f", key=f"F{i}")
+
+# Aplicar condiciones de borde
+todos_gdl = np.arange(2 * n_nodos)
+gdl_libres = np.setdiff1d(todos_gdl, gdl_fijos)
+
+# Reducción de matrices
+K_reducida = K_global[np.ix_(gdl_libres, gdl_libres)]
+F_reducida = F_global[gdl_libres]
+
+# Resolución del sistema
+if K_reducida.size > 0:
+    u_reducida = np.linalg.solve(K_reducida, F_reducida)
+else:
+    u_reducida = np.array([])
+
+# Reconstruir vector de desplazamientos completo
+u = np.zeros((2 * n_nodos, 1))
+for idx, gdl in enumerate(gdl_libres):
+    u[gdl] = u_reducida[idx]
+
+# Calcular reacciones: R = K_global * u - F_global
+reacciones = np.dot(K_global, u) - F_global
+
+# Mostrar resultados
+st.subheader("📌 Desplazamientos nodales")
+df_u = pd.DataFrame(u, columns=["Desplazamiento [m]"])
+st.dataframe(df_u.style.format(precision=4))
+
+st.subheader("💥 Reacciones en apoyos")
+df_reacciones = pd.DataFrame(reacciones, columns=["Reacción [N]"])
+st.dataframe(df_reacciones.style.format(precision=2))
+
 # Gráfico
 st.markdown("""
     <div style="text-align:center; padding-top:20px;">
