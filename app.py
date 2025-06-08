@@ -81,14 +81,8 @@ for idx, (ni, nf, E, A) in enumerate(elementos):
         for j in range(4):
             K_global[dofs[i], dofs[j]] += k_elem[i, j]
 
-st.markdown("""
-    <div style="text-align:center; padding-top:20px;">
-        <h2 style="color:#4F8BF9;">📐 Matriz de Rigidez Global</h2>
-    </div>
-""", unsafe_allow_html=True)
-
-df_Kglobal = pd.DataFrame(np.round(K_global, decimals=2))
-st.dataframe(df_Kglobal.style.background_gradient(cmap="Blues").format(precision=2))
+st.subheader("📐 Matriz de rigidez global ensamblada")
+st.dataframe(pd.DataFrame(K_global))
 
 # Gráfico
 st.subheader("📊 Estructura Visual")
