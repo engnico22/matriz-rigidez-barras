@@ -35,6 +35,15 @@ st.dataframe(df_coords)
 
 # Entrar elementos
 n_elem = st.sidebar.number_input("Cantidad de barras", min_value=1, max_value=30, value=2)
+# Selección de grados de libertad fijos (condiciones de borde)
+st.sidebar.markdown("### 🧷 Condiciones de contorno")
+st.sidebar.markdown("Seleccioná los grados de libertad fijos.\n\nEj: 0=X del Nodo 0, 1=Y del Nodo 0, 2=X del Nodo 1, etc.")
+gdl_fijos = st.sidebar.multiselect(
+    "Grados de libertad fijos (nodos empotrados o apoyos)",
+    options=list(range(2 * n_nodos)),
+    default=[]
+)
+
 st.subheader("🔩 Propiedades de las Barras")
 
 elementos = []
