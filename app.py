@@ -81,24 +81,42 @@ for idx, (ni, nf, E, A) in enumerate(elementos):
         for j in range(4):
             K_global[dofs[i], dofs[j]] += k_elem[i, j]
 
-st.subheader("📐 Matriz de rigidez global ensamblada")
-st.dataframe(pd.DataFrame(K_global))
+st.markdown("""
+    <div style="text-align:center; padding-top:20px;">
+        <h2 style="color:#4F8BF9;">📐 Matriz de Rigidez Global</h2>
+    </div>
+""", unsafe_allow_html=True)
+
+df_Kglobal = pd.DataFrame(np.round(K_global, decimals=2))
+st.dataframe(df_Kglobal.style.background_gradient(cmap="Blues").format(precision=2))
 
 # Gráfico
-st.subheader("📊 Estructura Visual")
-fig, ax = plt.subplots()
+st.markdown("""
+    <div style="text-align:center; padding-top:20px;">
+        <h2 style="color:#4F8BF9;">📊 Visualización de la Estructura</h2>
+    </div>
+""", unsafe_allow_html=True)
+
+fig, ax = plt.subplots(figsize=(8, 6))
+ax.set_facecolor("white")
+ax.set_aspect("equal")
+
+# Dibujar barras
+for idx, (ni, nf, _, _) in enumerate(elementos):
+    xi, yi = coords[int(ni)]
+    xj, yj = coords[int(nf)]
+    ax.plot([xi, xj], [yi, yj], 'steelblue', linewidth=2)
+    mx, my = (xi + xj)/2, (yi + yj)/2
+    ax.text(mx, my, f"B{idx}", color="gray", fontsize=10, ha="center")
+
+# Dibujar nodos
 for i, (x, y) in enumerate(coords):
-    ax.plot(x, y, 'ko')
-    ax.text(x + 0.1, y + 0.1, f"N{i}", fontsize=12)
+    ax.plot(x, y, 'o', markersize=8, color="#FF4B4B")
+    ax.text(x + 0.1, y + 0.1, f"N{i}", fontsize=11, color="black")
 
-for (ni, nf, _, _) in elementos:
-    x_vals = [coords[int(ni)][0], coords[int(nf)][0]]
-    y_vals = [coords[int(ni)][1], coords[int(nf)][1]]
-    ax.plot(x_vals, y_vals, 'b-', linewidth=2)
-
-ax.set_title("Estructura de barras")
+ax.set_title("Vista 2D de la estructura", fontsize=14)
 ax.set_xlabel("X [m]")
 ax.set_ylabel("Y [m]")
-ax.axis("equal")
-ax.grid(True)
+ax.grid(True, linestyle='--', alpha=0.5)
 st.pyplot(fig)
+
