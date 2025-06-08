@@ -3,9 +3,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-st.set_page_config(page_title="Calculadora de Rigide", layout="wide")
+st.set_page_config(page_title="Calculadora de Rigidez", layout="wide")
 
-st.title("🧮 Calculadora de Matriz de Rigidez - Estructuras Aeronáuticas III")
+st.title("🧮 Calculadora de Matriz de Rigide - Estructuras Aeronáuticas III")
 st.markdown("Esta app te permite calcular matrices de rigidez de barras estructurales 2D de forma automática. Ideal para tus trabajos prácticos.")
 
 st.sidebar.header("🔧 Parámetros del problema")
