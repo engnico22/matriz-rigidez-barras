@@ -144,28 +144,44 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
+# Slider para amplificar desplazamientos
+factor_amplificacion = st.slider("🔍 Factor de amplificación de desplazamientos", min_value=1, max_value=500, value=100, step=10)
+
 fig, ax = plt.subplots(figsize=(8, 6))
 ax.set_facecolor("white")
 ax.set_aspect("equal")
 
-# Dibujar barras
+# Dibujar estructura original (rojo)
 for idx, (ni, nf, _, _) in enumerate(elementos):
     xi, yi = coords[int(ni)]
     xj, yj = coords[int(nf)]
-    ax.plot([xi, xj], [yi, yj], color='steelblue', linewidth=2)
+    ax.plot([xi, xj], [yi, yj], color='lightcoral', linewidth=2, label="Original" if idx == 0 else "")
 
-# Dibujar nodos
+# Dibujar estructura deformada (azul)
+coords_deformados = coords + factor_amplificacion * u.reshape(-1, 2)
+for idx, (ni, nf, _, _) in enumerate(elementos):
+    xi, yi = coords_deformados[int(ni)]
+    xj, yj = coords_deformados[int(nf)]
+    ax.plot([xi, xj], [yi, yj], color='steelblue', linestyle='--', linewidth=2, label="Deformada" if idx == 0 else "")
+
+# Dibujar nodos originales
 for i, (x, y) in enumerate(coords):
-    ax.plot(x, y, 'o', markersize=8, color="#FF4B4B")
-    ax.text(x + 0.05, y + 0.05, f"N{i}", fontsize=11, color="black", ha="center", va="center")
+    ax.plot(x, y, 'o', markersize=6, color="black")
+    ax.text(x + 0.05, y + 0.05, f"N{i}", fontsize=10, color="black", ha="center", va="center")
 
-# Limpiar márgenes y ajustar eje
-ax.set_title("Vista 2D de la estructura", fontsize=14, color="#333333")
+# Dibujar nodos deformados
+for i, (xd, yd) in enumerate(coords_deformados):
+    ax.plot(xd, yd, 'o', markersize=6, color="blue")
+    ax.text(xd + 0.05, yd + 0.05, f"N{i}'", fontsize=10, color="blue", ha="center", va="center")
+
+# Ajuste de ejes
+ax.set_title("Vista 2D de la estructura (Original y Deformada)", fontsize=14, color="#333333")
 ax.set_xlabel("X [m]", fontsize=12)
 ax.set_ylabel("Y [m]", fontsize=12)
 ax.grid(True, linestyle='--', alpha=0.5)
 ax.set_xlim(min(coords[:,0]) - 1, max(coords[:,0]) + 1)
 ax.set_ylim(min(coords[:,1]) - 1, max(coords[:,1]) + 1)
+ax.legend()
 
 st.pyplot(fig)
 
