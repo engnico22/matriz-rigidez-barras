@@ -105,19 +105,21 @@ ax.set_aspect("equal")
 for idx, (ni, nf, _, _) in enumerate(elementos):
     xi, yi = coords[int(ni)]
     xj, yj = coords[int(nf)]
-    ax.plot([xi, xj], [yi, yj], 'steelblue', linewidth=2)
-    mx, my = (xi + xj)/2, (yi + yj)/2
-    ax.text(mx, my, f"B{idx}", color="gray", fontsize=10, ha="center")
+    ax.plot([xi, xj], [yi, yj], color='steelblue', linewidth=2)
 
 # Dibujar nodos
 for i, (x, y) in enumerate(coords):
     ax.plot(x, y, 'o', markersize=8, color="#FF4B4B")
-    ax.text(x + 0.1, y + 0.1, f"N{i}", fontsize=11, color="black")
+    ax.text(x + 0.05, y + 0.05, f"N{i}", fontsize=11, color="black", ha="center", va="center")
 
-ax.set_title("Vista 2D de la estructura", fontsize=14)
-ax.set_xlabel("X [m]")
-ax.set_ylabel("Y [m]")
+# Limpiar márgenes y ajustar eje
+ax.set_title("Vista 2D de la estructura", fontsize=14, color="#333333")
+ax.set_xlabel("X [m]", fontsize=12)
+ax.set_ylabel("Y [m]", fontsize=12)
 ax.grid(True, linestyle='--', alpha=0.5)
+ax.set_xlim(min(coords[:,0]) - 1, max(coords[:,0]) + 1)
+ax.set_ylim(min(coords[:,1]) - 1, max(coords[:,1]) + 1)
+
 st.pyplot(fig)
 
 # Botón para descargar la matriz de rigidez global
