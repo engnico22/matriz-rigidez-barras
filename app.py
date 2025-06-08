@@ -5,7 +5,16 @@ import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Calculadora de Rigidez", layout="wide")
 
-st.title("🧮 Calculadora de Matriz de Rigide - Estructuras Aeronáuticas III")
+# ENCABEZADO PRINCIPAL
+st.markdown("""
+    <div style="text-align: center;">
+        <h1 style="color:#4F8BF9;">🧮 Calculadora de Matriz de Rigidez</h1>
+        <h3>Ingeniería Aeronautica - UTN</h3>
+        <p style="font-size:18px;">Materia: Estructuras Aeronáuticas III</p>
+        <p style="font-size:16px;">Alumno: <strong>Lahan, Alberto Nicolas</strong></p>
+        <hr style="border:1px solid #4F8BF9">
+    </div>
+""", unsafe_allow_html=True)
 st.markdown("Esta app te permite calcular matrices de rigidez de barras estructurales 2D de forma automática. Ideal para tus trabajos prácticos.")
 
 st.sidebar.header("🔧 Parámetros del problema")
