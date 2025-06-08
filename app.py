@@ -15,7 +15,7 @@ st.markdown("""
         <hr style="border:1px solid #4F8BF9">
     </div>
 """, unsafe_allow_html=True)
-st.markdown("Esta app te permite calcular matrices de rigidez de barras estructurales 2D de forma automática. Ideal para tus trabajos prácticos.")
+st.markdown("Esta app te permite calcular matrices de rigidez de barras estructurales 2D de forma automática.")
 
 st.sidebar.header("🔧 Parámetros del problema")
 
@@ -38,13 +38,18 @@ n_elem = st.sidebar.number_input("Cantidad de barras", min_value=1, max_value=30
 st.subheader("🔩 Propiedades de las Barras")
 
 elementos = []
+
 for i in range(n_elem):
-    st.markdown(f"**Barra {i}**")
-    ni = st.number_input(f"Nodo inicial (Barra {i})", min_value=0, max_value=n_nodos-1, key=f"ni{i}")
-    nf = st.number_input(f"Nodo final (Barra {i})", min_value=0, max_value=n_nodos-1, key=f"nf{i}")
-    E = st.number_input(f"Módulo de Young E (Pa) - Barra {i}", value=2.1e11, key=f"E{i}")
-    A = st.number_input(f"Área A (m²) - Barra {i}", value=0.005, key=f"A{i}")
-    elementos.append([ni, nf, E, A])
+    with st.container():
+        st.markdown(f"<h4 style='color:#4F8BF9;'>Barra {i}</h4>", unsafe_allow_html=True)
+        col1, col2 = st.columns(2)
+        with col1:
+            ni = st.number_input(f"Nodo inicial", min_value=0, max_value=n_nodos-1, key=f"ni{i}")
+            E = st.number_input(f"Módulo de Young E (Pa)", value=2.1e11, key=f"E{i}", format="%.2e")
+        with col2:
+            nf = st.number_input(f"Nodo final", min_value=0, max_value=n_nodos-1, key=f"nf{i}")
+            A = st.number_input(f"Área A (m²)", value=0.005, key=f"A{i}", format="%.4f")
+        elementos.append([ni, nf, E, A])
 
 # Función de matriz de rigidez global
 def matriz_rigidez_global_barra(xi, yi, xj, yj, E, A):
