@@ -190,7 +190,7 @@ for idx, (ni, nf, _, _) in enumerate(elementos):
     ax.plot([xi, xj], [yi, yj], color='lightcoral', linewidth=2, label="Original" if idx == 0 else "")
 
 # Dibujar estructura deformada (azul)
-coords_deformados = coords + factor_amplificacion * u.reshape(-1, 2)
+coords_deformados = coords + factor_amplificacion * u.flatten().reshape(-1, 2)
 for idx, (ni, nf, _, _) in enumerate(elementos):
     xi, yi = coords_deformados[int(ni)]
     xj, yj = coords_deformados[int(nf)]
