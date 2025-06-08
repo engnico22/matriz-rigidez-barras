@@ -137,6 +137,38 @@ st.subheader("💥 Reacciones en apoyos")
 df_reacciones = pd.DataFrame(reacciones, columns=["Reacción [N]"])
 st.dataframe(df_reacciones.style.format(precision=2))
 
+# ---- BOTONES PARA DESCARGAR RESULTADOS ----
+
+# Organizar desplazamientos en formato por nodo
+df_u_nodal = pd.DataFrame(u.reshape(-1, 2), columns=["Ux [m]", "Uy [m]"])
+df_u_nodal.index = [f"Nodo {i}" for i in range(len(df_u_nodal))]
+
+# Organizar reacciones en formato por nodo
+df_R_nodal = pd.DataFrame(reacciones.reshape(-1, 2), columns=["Rx [N]", "Ry [N]"])
+df_R_nodal.index = [f"Nodo {i}" for i in range(len(df_R_nodal))]
+
+st.markdown("### 📤 Descargar Resultados Nodalizados")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    csv_u = df_u_nodal.to_csv().encode('utf-8')
+    st.download_button(
+        label="⬇️ Descargar desplazamientos",
+        data=csv_u,
+        file_name='desplazamientos.csv',
+        mime='text/csv'
+    )
+
+with col2:
+    csv_R = df_R_nodal.to_csv().encode('utf-8')
+    st.download_button(
+        label="⬇️ Descargar reacciones",
+        data=csv_R,
+        file_name='reacciones.csv',
+        mime='text/csv'
+    )
+
 # Gráfico
 st.markdown("""
     <div style="text-align:center; padding-top:20px;">
