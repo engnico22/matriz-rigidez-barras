@@ -214,7 +214,7 @@ fig.update_layout(
 fig.update_yaxes(scaleanchor="x", scaleratio=1)  # Mantiene proporción 1:1
 st.plotly_chart(fig, use_container_width=True)
 
-# Botón para descargar la matriz de rigidez global
+# Boton para descargar la matriz de rigidez global
 csv = df_Kglobal.to_csv(index=False).encode('utf-8')
 
 st.download_button(
