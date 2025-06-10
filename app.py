@@ -177,7 +177,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-factor_amplificacion = st.slider("🔍 Factor de amplificación de desplazamientos", min_value=1, max_value=500, value=100, step=10)
+factor_amplificacion = st.slider("🔍 Factor de amplificación de desplazamientos", min_value=1, max_value=-500, value=-100, step=10)
 
 # Calcular coordenadas deformadas
 coords_deformados = coords + factor_amplificacion * u.reshape(-1, 2)
