@@ -20,7 +20,7 @@ st.markdown("Esta app te permite calcular matrices de rigidez de barras estructu
 
 st.sidebar.header("🔧 Parámetros del problema")
 
-# Entrar nodos
+# Entrada de nodos
 n_nodos = st.sidebar.number_input("Cantidad de nodos", min_value=2, max_value=20, value=4)
 st.subheader("📍 Coordenadas de los Nodos")
 
@@ -34,7 +34,7 @@ coords = np.array(coords)
 df_coords = pd.DataFrame(coords, columns=["X", "Y"])
 st.dataframe(df_coords)
 
-# Entrar elementos
+# Entrada de elementos
 n_elem = st.sidebar.number_input("Cantidad de barras", min_value=1, max_value=30, value=2)
 # Selección de grados de libertad fijos (condiciones de borde)
 st.sidebar.markdown("### 🧷 Condiciones de contorno")
@@ -61,7 +61,7 @@ for i in range(n_elem):
             A = st.number_input(f"Área A (m²)", value=0.005, key=f"A{i}", format="%.4f")
         elementos.append([ni, nf, E, A])
 
-# Función de matriz de rigidez global
+# Funcion de matriz de rigidez global
 def matriz_rigidez_global_barra(xi, yi, xj, yj, E, A):
     L = np.sqrt((xj - xi)**2 + (yj - yi)**2)
     C = (xj - xi) / L
@@ -74,7 +74,7 @@ def matriz_rigidez_global_barra(xi, yi, xj, yj, E, A):
     ])
     return k, L
 
-# Ensamblar matriz global
+# Se ensambla la matriz global
 K_global = np.zeros((2 * n_nodos, 2 * n_nodos))
 st.subheader("🧩 Matrices de rigidez por barra")
 
@@ -102,16 +102,16 @@ st.dataframe(df_Kglobal.style.background_gradient(cmap="Blues").format(precision
 
 st.subheader("🎯 Vector de Cargas")
 
-# Ingreso del vector de fuerzas
+# Se Ingresa el vector de fuerzas
 F_global = np.zeros((2 * n_nodos, 1))
 for i in range(2 * n_nodos):
     F_global[i, 0] = st.number_input(f"Fuerza en GDL {i}", value=0.0, format="%.2f", key=f"F{i}")
 
-# Aplicar condiciones de borde
+# Se Aplican condiciones de borde
 todos_gdl = np.arange(2 * n_nodos)
 gdl_libres = np.setdiff1d(todos_gdl, gdl_fijos)
 
-# Reducción de matrices
+# Se reducen las matrices
 K_reducida = K_global[np.ix_(gdl_libres, gdl_libres)]
 F_reducida = F_global[gdl_libres]
 
@@ -121,15 +121,15 @@ if K_reducida.size > 0:
 else:
     u_reducida = np.array([])
 
-# Reconstruir vector de desplazamientos completo
+# Se reconstruye el vector de desplazamientos completo
 u = np.zeros((2 * n_nodos, 1))
 for idx, gdl in enumerate(gdl_libres):
     u[gdl] = u_reducida[idx]
 
-# Calcular reacciones: R = K_global * u - F_global
+# Calculo de reacciones: R = K_global * u - F_global
 reacciones = np.dot(K_global, u) - F_global
 
-# Mostrar resultados
+# Se muestran los resultados
 st.subheader("📌 Desplazamientos nodales")
 df_u = pd.DataFrame(u, columns=["Desplazamiento [m]"])
 st.dataframe(df_u.style.format(precision=4))
@@ -138,13 +138,13 @@ st.subheader("💥 Reacciones en apoyos")
 df_reacciones = pd.DataFrame(reacciones, columns=["Reacción [N]"])
 st.dataframe(df_reacciones.style.format(precision=2))
 
-# ---- BOTONES PARA DESCARGAR RESULTADOS ----
+# BOTONES PARA DESCARGAR RESULTADOS 
 
-# Organizar desplazamientos en formato por nodo
+# Se organizan los desplazamientos en formato por nodo
 df_u_nodal = pd.DataFrame(u.reshape(-1, 2), columns=["Ux [m]", "Uy [m]"])
 df_u_nodal.index = [f"Nodo {i}" for i in range(len(df_u_nodal))]
 
-# Organizar reacciones en formato por nodo
+# Se organizan las reacciones en formato por nodo
 df_R_nodal = pd.DataFrame(reacciones.reshape(-1, 2), columns=["Rx [N]", "Ry [N]"])
 df_R_nodal.index = [f"Nodo {i}" for i in range(len(df_R_nodal))]
 
@@ -179,7 +179,7 @@ st.markdown("""
 
 factor_amplificacion = st.slider("🔍 Factor de amplificación de desplazamientos", min_value=1, max_value=-500, value=-100, step=10)
 
-# Calcular coordenadas deformadas
+# Calculo de coordenadas deformadas
 coords_deformados = coords + factor_amplificacion * u.reshape(-1, 2)
 
 fig = go.Figure()
