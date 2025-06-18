@@ -184,17 +184,27 @@ coords_deformados = coords + factor_amplificacion * u.reshape(-1, 2)
 
 fig = go.Figure()
 
-# Estructura original
+# Estructura original (solo un rótulo para la leyenda)
 for idx, (ni, nf, _, _) in enumerate(elementos):
     x = [coords[int(ni)][0], coords[int(nf)][0]]
     y = [coords[int(ni)][1], coords[int(nf)][1]]
-    fig.add_trace(go.Scatter(x=x, y=y, mode='lines+markers', name='Original', line=dict(color='red')))
+    fig.add_trace(go.Scatter(
+        x=x, y=y, mode='lines+markers',
+        name='Original' if idx == 0 else None,
+        showlegend=(idx == 0),
+        line=dict(color='red')
+    ))
 
-# Estructura deformada
+# Estructura deformada (solo un rótulo para la leyenda)
 for idx, (ni, nf, _, _) in enumerate(elementos):
     x = [coords_deformados[int(ni)][0], coords_deformados[int(nf)][0]]
     y = [coords_deformados[int(ni)][1], coords_deformados[int(nf)][1]]
-    fig.add_trace(go.Scatter(x=x, y=y, mode='lines+markers', name='Deformada', line=dict(color='blue', dash='dash')))
+    fig.add_trace(go.Scatter(
+        x=x, y=y, mode='lines+markers',
+        name='Deformada' if idx == 0 else None,
+        showlegend=(idx == 0),
+        line=dict(color='blue', dash='dash')
+    ))
 
 # Etiquetas de nodos originales y deformados
 for i in range(n_nodos):
