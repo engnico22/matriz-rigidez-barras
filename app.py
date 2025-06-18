@@ -6,19 +6,19 @@ import plotly.graph_objects as go
 
 st.set_page_config(page_title="Calculadora de Rigidez", layout="wide")
 
-# ENCABEZADO PRINCIPAL
+# Encabezado principal
 st.markdown("""
     <div style="text-align: center;">
         <h1 style="color:#4F8BF9;">🧮 Calculadora de Matriz de Rigidez</h1>
         <h3>Ingeniería Aeronautica - UTN</h3>
-        <p style="font-size:18px;">Materia: Estructuras Aeronáuticas III</p>
+        <p style="font-size:18px;">Materia: Estructuras Aeronauticas III</p>
         <p style="font-size:16px;">Alumno: <strong>Lahan, Alberto Nicolas</strong></p>
         <hr style="border:1px solid #4F8BF9">
     </div>
 """, unsafe_allow_html=True)
-st.markdown("Esta app te permite calcular matrices de rigidez de barras estructurales 2D de forma automática.")
+st.markdown("Esta app te permite calcular matrices de rigidez de barras estructurales 2D de forma automatica.")
 
-st.sidebar.header("🔧 Parámetros del problema")
+st.sidebar.header("🔧 Parametros del problema")
 
 # Entrada de nodos
 n_nodos = st.sidebar.number_input("Cantidad de nodos", min_value=2, max_value=20, value=4)
@@ -38,7 +38,7 @@ st.dataframe(df_coords)
 n_elem = st.sidebar.number_input("Cantidad de barras", min_value=1, max_value=30, value=2)
 # Selección de grados de libertad fijos (condiciones de borde)
 st.sidebar.markdown("### 🧷 Condiciones de contorno")
-st.sidebar.markdown("Seleccioná los grados de libertad fijos.\n\nEj: 0=X del Nodo 0, 1=Y del Nodo 0, 2=X del Nodo 1, etc.")
+st.sidebar.markdown("Selecciona los grados de libertad fijos.\n\nEj: 0=X del Nodo 0, 1=Y del Nodo 0, 2=X del Nodo 1, etc.")
 gdl_fijos = st.sidebar.multiselect(
     "Grados de libertad fijos (nodos empotrados o apoyos)",
     options=list(range(2 * n_nodos)),
@@ -58,7 +58,7 @@ for i in range(n_elem):
             E = st.number_input(f"Módulo de Young E (Pa)", value=2.1e11, key=f"E{i}", format="%.2e")
         with col2:
             nf = st.number_input(f"Nodo final", min_value=0, max_value=n_nodos-1, key=f"nf{i}")
-            A = st.number_input(f"Área A (m²)", value=0.005, key=f"A{i}", format="%.4f")
+            A = st.number_input(f"Area A (m²)", value=0.005, key=f"A{i}", format="%.4f")
         elementos.append([ni, nf, E, A])
 
 # Funcion de matriz de rigidez global
@@ -115,7 +115,7 @@ gdl_libres = np.setdiff1d(todos_gdl, gdl_fijos)
 K_reducida = K_global[np.ix_(gdl_libres, gdl_libres)]
 F_reducida = F_global[gdl_libres]
 
-# Resolución del sistema
+# Resolucion del sistema
 if K_reducida.size > 0:
     u_reducida = np.linalg.solve(K_reducida, F_reducida)
 else:
@@ -135,10 +135,10 @@ df_u = pd.DataFrame(u, columns=["Desplazamiento [m]"])
 st.dataframe(df_u.style.format(precision=4))
 
 st.subheader("💥 Reacciones en apoyos")
-df_reacciones = pd.DataFrame(reacciones, columns=["Reacción [N]"])
+df_reacciones = pd.DataFrame(reacciones, columns=["Reaccion [N]"])
 st.dataframe(df_reacciones.style.format(precision=2))
 
-# BOTONES PARA DESCARGAR RESULTADOS 
+# Botones para descargar los resultados 
 
 # Se organizan los desplazamientos en formato por nodo
 df_u_nodal = pd.DataFrame(u.reshape(-1, 2), columns=["Ux [m]", "Uy [m]"])
@@ -170,7 +170,7 @@ with col2:
         mime='text/csv'
     )
 
-# Gráfico
+# Grafico
 st.markdown("""
     <div style="text-align:center; padding-top:20px;">
         <h2 style="color:#4F8BF9;">📊 Visualización de la Estructura</h2>
